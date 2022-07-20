@@ -2,7 +2,7 @@ ARG DEBIAN_VERSION=stable-slim
 #:${DEBIAN_VERSION}
 FROM debian AS snapbase
 LABEL maintainer "Matt Dickinson <matt@sanbridge.org>"
- 
+
 ARG SNPSRV_VERSION=0.26.0-1
 ENV Version=$SNPSRV_VERSION
 ENV HOME /root
