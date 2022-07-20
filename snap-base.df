@@ -1,0 +1,24 @@
+ARG DEBIAN_VERSION=stable-slim
+
+FROM debian:${DEBIAN_VERSION}
+LABEL maintainer "Matt Dickinson <matt.dickinson@outlook.com>"
+
+ARG SNPSRV_VERSION=0.26.0
+
+#Installation of everything needed to setup snapserver
+RUN apt-get update -y && \
+    apt-get install wget -y && \
+#    apt-get install apt-utils -y && \
+    apt-get install nano -y && \
+    apt-get install git -y && \
+    apt-get -f install
+
+
+#Installation of snapserver
+RUN wget https://github.com/badaix/snapcast/releases/download/v${SNPSRV_VERSION}/snapserver_${SNPSRV_VERSION}-1_amd64.deb
+RUN apt-get update && apt-get -f install -y \
+	snapserver
+	
+#Clean up image and remove temporary apt-get      
+RUN apt-get clean \
+     && rm -rf /var/lib/apt/lists/* 
