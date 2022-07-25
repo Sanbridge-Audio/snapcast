@@ -26,7 +26,8 @@ RUN apt-get update && apt-get install -y \
 	libavahi-client-dev \
 	avahi-daemon \
 	apt-utils \
-	wget
+	wget \
+	mosquitto-clients
 #	libexpat1-dev 
 #	libboost-all-dev
 #	clean 
