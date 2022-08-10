@@ -37,9 +37,10 @@ RUN printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
 RUN echo exit 101 > /usr/sbin/policy-rc.d
 #RUN chmod +x /usr/sbin/policy-rc.d
 
+#RUN mkdir -p /etc/default/snapserver
+
 WORKDIR /tmp
 RUN wget https://github.com/badaix/snapcast/releases/download/v0.26.0/snapserver_0.26.0-1_amd64.deb 
-
 
 RUN apt install ./snapserver_0.26.0-1_amd64.deb
 
@@ -63,7 +64,7 @@ RUN rm /etc/snapserver.conf
 
 COPY snapserver.conf /etc
 
-VOLUME /tmp /etc/default/snapserver
+VOLUME /tmp /var/lib
 
 
 CMD ["snapserver", "--stdout", "--no-daemon"]
