@@ -64,7 +64,7 @@ RUN rm /etc/snapserver.conf
 
 COPY snapserver.conf /etc
 
-VOLUME /tmp /var/lib
+VOLUME /tmp 
 
 
 CMD ["snapserver", "--stdout", "--no-daemon"]
