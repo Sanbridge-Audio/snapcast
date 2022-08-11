@@ -1,78 +1,22 @@
-ARG DEBIAN_VERSION=stable-slim
-#:${DEBIAN_VERSION}
-FROM debian:stable AS snapbase
-LABEL maintainer "Matt Dickinson <matt@sanbridge.org>"
+# We have to build the develop branch of snapserver for now until the next version is released
+FROM alpine:edge AS builder
+WORKDIR /snapcast
 
-ARG SNPSRV_VERSION=0.26.0-1
-ENV Version=$SNPSRV_VERSION
-ENV HOME /root
-ENV TZ=America/New_York
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
+RUN apk add --no-cache curl bash librespot git alpine-sdk libvorbis-dev soxr-dev flac-dev avahi-dev expat-dev boost-dev opus-dev alsa-lib-dev npm
+RUN git clone --branch develop https://github.com/badaix/snapcast.git /snapcast
+RUN npm install --silent --save-dev -g typescript@4.3
+RUN curl -L https://github.com/badaix/snapweb/archive/refs/tags/v0.2.0.tar.gz | tar xz --directory / && cd /snapweb-0.2.0 && make
+RUN make server
 
-#Installation of everything needed to setup snapserver
-RUN apt-get update && apt-get install -y \
-#    apt-get install wget -y && \
-#    apt-get install apt-utils -y && \
-	nano \
-	git \
-#	build-essential \
-#	libasound2-dev \
-	libpulse-dev \
-#	libvorbisidec-dev \
-#	libvorbis-dev \
-#	libopus-dev \
-#	libflac-dev \
-	libsoxr-dev \
-	alsa-utils \
-	libavahi-client-dev \
-	avahi-daemon \
-	apt-utils \
-	wget \
-	mosquitto-clients
-#	libexpat1-dev 
-#	libboost-all-dev
-#	clean 
-#	rm -rf /var/lib/apt/lists/* 
+FROM alpine:edge
 
-RUN printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
-RUN echo exit 101 > /usr/sbin/policy-rc.d
-#RUN chmod +x /usr/sbin/policy-rc.d
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
+RUN apk add --no-cache librespot snapcast-server
 
-#RUN mkdir -p /etc/default/snapserver
-
-WORKDIR /tmp
-RUN wget https://github.com/badaix/snapcast/releases/download/v0.26.0/snapserver_0.26.0-1_amd64.deb 
-
-RUN apt install ./snapserver_0.26.0-1_amd64.deb
-
-
-
-FROM snapbase
-WORKDIR $HOME
-#Download the most recent s6 overlay.
-ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64.tar.gz /tmp
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
-
-COPY snapserver /etc/services.d/snapserver
-
-
-
-#RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-#RUN mkdir -p ~/.config/snapcast/
-
-RUN rm /etc/snapserver.conf
-
-COPY snapserver.conf /etc
-
-VOLUME /tmp
-
-
-CMD ["snapserver", "--stdout", "--no-daemon"]
-ENTRYPOINT ["/init"]
-
-
-
-EXPOSE 1704
-EXPOSE 1705
-
+COPY --from=builder /snapcast/server/snapserver /usr/bin/
+COPY --from=builder /snapweb-0.2.0/dist /usr/share/snapserver/snapweb
+COPY snapserver.conf /etc/snapserver.conf
+EXPOSE 1704 1705 1780
+ENTRYPOINT /usr/bin/snapserver $EXTRA_ARGS
 
