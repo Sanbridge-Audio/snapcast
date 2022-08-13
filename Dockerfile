@@ -3,7 +3,21 @@ FROM alpine:edge AS builder
 WORKDIR /snapcast
 
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
-RUN apk add --no-cache curl bash librespot git alpine-sdk libvorbis-dev soxr-dev flac-dev avahi-dev expat-dev boost-dev opus-dev alsa-lib-dev npm
+RUN apk add --no-cache \
+	curl \
+	bash \
+	librespot \
+	git \
+	alpine-sdk \
+	libvorbis-dev \
+	soxr-dev \
+	flac-dev \
+	avahi-dev \
+	expat-dev \
+	boost-dev \
+	opus-dev \
+	alsa-lib-dev \ 
+	npm
 RUN git clone --branch develop https://github.com/badaix/snapcast.git /snapcast
 RUN npm install --silent --save-dev -g typescript@4.3
 RUN curl -L https://github.com/badaix/snapweb/archive/refs/tags/v0.2.0.tar.gz | tar xz --directory / && cd /snapweb-0.2.0 && make
