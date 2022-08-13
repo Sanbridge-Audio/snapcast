@@ -17,6 +17,7 @@ RUN apk add --no-cache \
 	boost-dev \
 	opus-dev \
 	alsa-lib-dev \ 
+	nano \
 	npm
 RUN git clone --branch develop https://github.com/badaix/snapcast.git /snapcast
 RUN npm install --silent --save-dev -g typescript@4.3
