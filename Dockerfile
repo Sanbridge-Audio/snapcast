@@ -6,7 +6,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repos
 RUN apk add --no-cache \
 	curl \
 	bash \
-	librespot \
+	#librespot \
 	git \
 	alpine-sdk \
 	libvorbis-dev \
@@ -26,7 +26,7 @@ RUN make server
 FROM alpine:edge
 
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
-RUN apk add --no-cache librespot snapcast-server
+RUN apk add --no-cache snapcast-server
 
 COPY --from=builder /snapcast/server/snapserver /usr/bin/
 COPY --from=builder /snapweb-0.2.0/dist /usr/share/snapserver/snapweb
