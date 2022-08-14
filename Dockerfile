@@ -4,21 +4,21 @@ FROM alpine:edge AS builder
 
 #RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
 RUN apk add --no-cache \
-	curl \
+#	curl \
 	bash \
 	#librespot \
-	git \
+#	git \
 	alpine-sdk \
-	libvorbis-dev \
-	soxr-dev \
-	flac-dev \
-	avahi-dev \
-	expat-dev \
-	boost-dev \
-	opus-dev \
+#	libvorbis-dev \
+#	soxr-dev \
+#	flac-dev \
+#	avahi-dev \
+#	expat-dev \
+#	boost-dev \
+#	opus-dev \
 	alsa-lib-dev \ 
 	nano \
-	snapcast-server
+	snapcast
 
 #	npm
 #RUN git clone --branch develop https://github.com/badaix/snapcast.git /snapcast
