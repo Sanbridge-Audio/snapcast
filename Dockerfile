@@ -35,7 +35,7 @@ RUN apk add --no-cache \
 #COPY --from=builder /snapweb-0.2.0/dist /usr/share/snapserver/snapweb
 
 #RUN rm /etc/snapserver.conf
-COPY snapserver.conf /etc/snapserver.conf
+#COPY snapserver.conf /etc/snapserver.conf
 EXPOSE 1704 1705 1780
 CMD ["snapserver", "--stdout", "--no-daemon"]
 ENTRYPOINT /usr/bin/snapserver 
