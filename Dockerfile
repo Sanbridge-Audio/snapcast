@@ -31,7 +31,7 @@ RUN apk add --no-cache snapcast-server
 
 COPY --from=builder /snapcast/server/snapserver /usr/bin/
 COPY --from=builder /snapweb-0.2.0/dist /usr/share/snapserver/snapweb
-COPY snapserver.conf /etc/snapserver.conf
+#COPY snapserver.conf /etc/snapserver.conf
 EXPOSE 1704 1705 1780
 CMD ["snapserver", "--stdout", "--no-daemon"]
 ENTRYPOINT /usr/bin/snapserver 
