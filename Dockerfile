@@ -24,15 +24,15 @@ RUN npm install --silent --save-dev -g typescript@4.3
 RUN curl -L https://github.com/badaix/snapweb/archive/refs/tags/v0.2.0.tar.gz | tar xz --directory / && cd /snapweb-0.2.0 && make
 RUN make server
 
-FROM alpine:edge
+#FROM alpine:edge
 
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
-RUN apk add --no-cache snapcast-server
+#RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
+#RUN apk add --no-cache snapcast-server
 
-COPY --from=builder /snapcast/server/snapserver /usr/bin/
-COPY --from=builder /snapweb-0.2.0/dist /usr/share/snapserver/snapweb
+#COPY --from=builder /snapcast/server/snapserver /usr/bin/
+#COPY --from=builder /snapweb-0.2.0/dist /usr/share/snapserver/snapweb
 
-#RUN rm /etc/snapserver.conf
+RUN rm /etc/snapserver.conf
 COPY snapserver.conf /etc/snapserver.conf
 EXPOSE 1704 1705 1780
 CMD ["snapserver", "--stdout", "--no-daemon"]
