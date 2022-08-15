@@ -57,12 +57,12 @@ COPY snapserver.conf /etc
 VOLUME /tmp
 
 
-#CMD ["snapserver", "--stdout", "--no-daemon"]
+CMD ["snapserver", "--stdout", "--no-daemon"]
 #ENTRYPOINT ["/init"]
 
 
 
-EXPOSE 1704
-EXPOSE 1705
+EXPOSE 1704 1705 1780
+#EXPOSE 1705
 
 
