@@ -44,7 +44,7 @@ RUN make installserver
 
 #COPY snapserver /etc/services.d/snapserver
 
-#FROM debian:stable-slim AS config
+FROM debian:stable-slim AS config
 
 RUN apt-get update && apt-get install -y \
 #    apt-get install wget -y && \
@@ -63,9 +63,14 @@ RUN apt-get update && apt-get install -y \
   libexpat1-dev \
 	mosquitto-clients
 
-#COPY --from=snapbase /usr/bin/snapserver /usr/bin
+COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
-#COPY --from=snapbase /usr/share/snapserver/snapweb /usr/share
+
+
+COPY --from=snapbase /usr/share/snapserver /usr/share
+
+
+#COPY --from=snapbase /usr/share/snapserver/index.html /usr/share
 #RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 #RUN mkdir -p ~/.config/snapcast/
