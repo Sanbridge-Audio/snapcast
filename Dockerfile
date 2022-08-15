@@ -34,8 +34,8 @@ RUN git clone https://github.com/badaix/snapcast.git && \
 
 WORKDIR /snapcast
 #RUN cd snapcast
-#RUN make
-
+RUN make
+RUN make installserver
 #FROM snapbase
 #WORKDIR $HOME
 #Download the most recent s6 overlay.
