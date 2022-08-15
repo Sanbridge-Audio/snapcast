@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y \
   libexpat1-dev \
 	mosquitto-clients
 
-ADD git clone https://github.com/badaix/snapcast.git
+RUN git clone https://github.com/badaix/snapcast.git
 
 FROM snapbase
 WORKDIR $HOME
