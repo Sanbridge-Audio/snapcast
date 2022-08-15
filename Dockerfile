@@ -47,7 +47,7 @@ RUN make installserver
 FROM debian:stable-slim AS config
 
 
-COPY --from=snapbuild /usr/bin/snapserver /usr/bin
+COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
 #RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
