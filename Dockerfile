@@ -44,14 +44,12 @@ RUN make installserver
 
 #COPY snapserver /etc/services.d/snapserver
 
-FROM debian:stable-slim AS config
+#FROM debian:stable-slim AS config
 
 RUN apt-get update && apt-get install -y \
 #    apt-get install wget -y && \
 #    apt-get install apt-utils -y && \
 	nano \
-#	git \
-#	build-essential \
   libasound2-dev \
   libpulse-dev \
   libvorbisidec-dev \
@@ -63,12 +61,11 @@ RUN apt-get update && apt-get install -y \
   libavahi-client-dev \
   avahi-daemon \
   libexpat1-dev \
- # libboost-all-dev \
 	mosquitto-clients
 
-COPY --from=snapbase /usr/bin/snapserver /usr/bin
+#COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
-COPY --from=snapbase /usr/share/snapserver/snapweb /usr/share
+=COPY --from=snapbase /usr/share/snapserver/snapweb /usr/share
 #RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 #RUN mkdir -p ~/.config/snapcast/
