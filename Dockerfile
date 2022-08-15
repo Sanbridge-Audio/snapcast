@@ -8,7 +8,7 @@ RUN apk add --no-cache \
 	bash \
 	#librespot \
 #	git \
-	alpine-sdk \
+#	alpine-sdk \
 #	libvorbis-dev \
 #	soxr-dev \
 #	flac-dev \
