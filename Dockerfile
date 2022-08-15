@@ -44,7 +44,7 @@ COPY snapserver /etc/services.d/snapserver
 
 #RUN mkdir -p ~/.config/snapcast/
 
-RUN rm /etc/snapserver.conf
+#RUN rm /etc/snapserver.conf
 
 COPY snapserver.conf /etc
 
