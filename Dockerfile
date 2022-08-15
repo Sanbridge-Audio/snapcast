@@ -68,6 +68,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
+COPY --from=snapbase /usr/share/snapserver/snapweb /usr/share
 #RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 #RUN mkdir -p ~/.config/snapcast/
