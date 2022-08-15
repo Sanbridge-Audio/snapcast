@@ -46,6 +46,25 @@ RUN make installserver
 
 FROM debian:stable-slim AS config
 
+RUN apt-get update && apt-get install -y \
+#    apt-get install wget -y && \
+#    apt-get install apt-utils -y && \
+	nano \
+#	git \
+#	build-essential \
+  libasound2-dev \
+  libpulse-dev \
+  libvorbisidec-dev \
+  libvorbis-dev \
+  libopus-dev \
+  libflac-dev \
+  libsoxr-dev \
+  alsa-utils \
+  libavahi-client-dev \
+  avahi-daemon \
+  libexpat1-dev \
+ # libboost-all-dev \
+	mosquitto-clients
 
 COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
