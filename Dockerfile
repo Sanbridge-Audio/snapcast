@@ -33,8 +33,7 @@ RUN make installserver
 FROM debian:stable-slim AS config
 
 RUN apt-get update && apt-get install -y \
-	nano \
-  libasound2-dev \
+	libasound2-dev \
   libpulse-dev \
   libvorbisidec-dev \
   libvorbis-dev \
@@ -44,8 +43,7 @@ RUN apt-get update && apt-get install -y \
   alsa-utils \
   libavahi-client-dev \
   avahi-daemon \
-  libexpat1-dev \
-	mosquitto-clients
+  libexpat1-dev 
 
 COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
