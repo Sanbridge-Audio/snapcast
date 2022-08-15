@@ -5,7 +5,6 @@ ENV TZ=America/New_York
 
 #Installation of everything needed to setup snapserver
 RUN apt-get update && apt-get install -y \
-	nano \
 	git \
 	build-essential \
   libasound2-dev \
@@ -19,8 +18,7 @@ RUN apt-get update && apt-get install -y \
   libavahi-client-dev \
   avahi-daemon \
   libexpat1-dev \
-  libboost-all-dev \
-	mosquitto-clients
+  libboost-all-dev 
 
 RUN git clone https://github.com/badaix/snapcast.git && \
   cd snapcast 
@@ -43,7 +41,9 @@ RUN apt-get update && apt-get install -y \
   alsa-utils \
   libavahi-client-dev \
   avahi-daemon \
-  libexpat1-dev 
+  libexpat1-dev \
+  mosquitto-clients \
+  nano 
 
 COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
