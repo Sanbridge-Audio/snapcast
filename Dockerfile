@@ -28,7 +28,8 @@ RUN apt-get update && apt-get install -y \
   libexpat1-dev \
 	mosquitto-clients
 
-RUN git clone https://github.com/badaix/snapcast.git
+RUN git clone https://github.com/badaix/snapcast.git && \
+  cd snapcast 
 
 WORKDIR /snapcast
 #RUN cd snapcast
