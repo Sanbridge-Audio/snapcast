@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN git clone https://github.com/badaix/snapcast.git
 
+WORKDIR /snapcast
 #RUN cd <snapcast dir>
 #RUN make
 
