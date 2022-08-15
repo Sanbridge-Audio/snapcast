@@ -30,6 +30,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN git clone https://github.com/badaix/snapcast.git
 
+RUNcd <snapcast dir>
+RUN make
+
 FROM snapbase
 WORKDIR $HOME
 #Download the most recent s6 overlay.
