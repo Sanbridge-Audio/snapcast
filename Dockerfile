@@ -65,9 +65,9 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
+RUN mkdir /usr/share/snapserver
 
-
-COPY --from=snapbase /usr/share/snapserver /usr/share
+COPY --from=snapbase /usr/share/snapserver /usr/share/snapserver
 
 
 #COPY --from=snapbase /usr/share/snapserver/index.html /usr/share
