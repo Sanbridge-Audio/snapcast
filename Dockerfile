@@ -14,35 +14,19 @@ RUN apt-get update && apt-get install -y \
 #    apt-get install apt-utils -y && \
 	nano \
 	git \
-#	build-essential \
-#	libasound2-dev \
-	libpulse-dev \
-#	libvorbisidec-dev \
-#	libvorbis-dev \
-#	libopus-dev \
-#	libflac-dev \
-	libsoxr-dev \
-	alsa-utils \
-	libavahi-client-dev \
-	avahi-daemon \
-	apt-utils \
-	wget \
+	build-essential \
+  libasound2-dev \
+  libpulse-dev \
+  libvorbisidec-dev \
+  libvorbis-dev \
+  libopus-dev \
+  libflac-dev \
+  libsoxr-dev \
+  alsa-utils \
+  libavahi-client-dev \
+  avahi-daemon \
+  libexpat1-dev \
 	mosquitto-clients
-#	libexpat1-dev 
-#	libboost-all-dev
-#	clean 
-#	rm -rf /var/lib/apt/lists/* 
-
-RUN printf '#!/bin/sh\nexit 0' > /usr/sbin/policy-rc.d
-RUN echo exit 101 > /usr/sbin/policy-rc.d
-#RUN chmod +x /usr/sbin/policy-rc.d
-
-#RUN mkdir -p /etc/default/snapserver
-
-WORKDIR /tmp
-RUN wget https://github.com/badaix/snapcast/releases/download/v0.26.0/snapserver_0.26.0-1_amd64.deb 
-
-RUN apt install ./snapserver_0.26.0-1_amd64.deb
 
 
 
