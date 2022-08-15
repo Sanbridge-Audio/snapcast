@@ -30,8 +30,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN git clone https://github.com/badaix/snapcast.git
 
-RUN cd <snapcast dir>
-RUN make
+#RUN cd <snapcast dir>
+#RUN make
 
 FROM snapbase
 WORKDIR $HOME
