@@ -3,8 +3,8 @@ ARG DEBIAN_VERSION=stable-slim
 FROM debian:stable AS snapbase
 LABEL maintainer "Matt Dickinson <matt@sanbridge.org>"
 
-ARG SNPSRV_VERSION=0.26.0-1
-ENV Version=$SNPSRV_VERSION
+#ARG SNPSRV_VERSION=0.26.0-1
+#ENV Version=$SNPSRV_VERSION
 #ENV HOME /root
 ENV TZ=America/New_York
 
@@ -44,7 +44,10 @@ RUN make installserver
 
 #COPY snapserver /etc/services.d/snapserver
 
+FROM debian:stable-slim AS config
 
+
+COPY --from=snapbuild /usr/bin/snapserver /usr/bin
 
 #RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
