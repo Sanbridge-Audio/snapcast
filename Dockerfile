@@ -36,10 +36,10 @@ RUN git clone https://github.com/badaix/snapcast.git
 FROM snapbase
 WORKDIR $HOME
 #Download the most recent s6 overlay.
-ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64.tar.gz /tmp
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
+#ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64.tar.gz /tmp
+#RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
 
-COPY snapserver /etc/services.d/snapserver
+#COPY snapserver /etc/services.d/snapserver
 
 
 
@@ -54,8 +54,8 @@ COPY snapserver.conf /etc
 VOLUME /tmp
 
 
-CMD ["snapserver", "--stdout", "--no-daemon"]
-ENTRYPOINT ["/init"]
+#CMD ["snapserver", "--stdout", "--no-daemon"]
+#ENTRYPOINT ["/init"]
 
 
 
