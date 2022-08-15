@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y \
   libavahi-client-dev \
   avahi-daemon \
   libexpat1-dev \
-  boost \
+  libboost-all-dev \
 	mosquitto-clients
 
 RUN git clone https://github.com/badaix/snapcast.git && \
