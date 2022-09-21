@@ -5,20 +5,20 @@ ENV TZ=America/New_York
 
 #Installation of everything needed to setup snapserver
 RUN apt-get update && apt-get install -y \
-	git \
+	alsa-utils \
+	avahi-daemon \
 	build-essential \
-  libasound2-dev \
-  libpulse-dev \
-  libvorbisidec-dev \
-  libvorbis-dev \
-  libopus-dev \
-  libflac-dev \
-  libsoxr-dev \
-  alsa-utils \
-  libavahi-client-dev \
-  avahi-daemon \
-  libexpat1-dev \
-  libboost-all-dev 
+	git \
+	libasound2-dev \
+	libpulse-dev \
+	libvorbisidec-dev \
+	libvorbis-dev \
+	libopus-dev \
+	libflac-dev \
+	libsoxr-dev \
+	libavahi-client-dev \
+	libexpat1-dev \
+	libboost-all-dev 
 
 RUN git clone https://github.com/badaix/snapcast.git && \
   cd snapcast 
@@ -31,19 +31,19 @@ RUN make installserver
 FROM debian:stable-slim AS config
 
 RUN apt-get update && apt-get install -y \
+	alsa-utils \	
+	avahi-daemon \
 	libasound2-dev \
-  libpulse-dev \
-  libvorbisidec-dev \
-  libvorbis-dev \
-  libopus-dev \
-  libflac-dev \
-  libsoxr-dev \
-  alsa-utils \
-  libavahi-client-dev \
-  avahi-daemon \
-  libexpat1-dev \
-  mosquitto-clients \
-  nano 
+	libpulse-dev \
+	libvorbisidec-dev \
+	libvorbis-dev \
+	libopus-dev \
+	libflac-dev \
+	libsoxr-dev \
+	libavahi-client-dev \
+	libexpat1-dev \
+	mosquitto-clients \
+	nano 
 
 COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
@@ -56,6 +56,5 @@ COPY snapserver.conf /etc
 VOLUME /tmp
 
 CMD ["snapserver", "--stdout", "--no-daemon"]
-#ENTRYPOINT ["/init"]
 
 EXPOSE 1704 1705 1780
