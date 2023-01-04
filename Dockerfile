@@ -1,5 +1,5 @@
 FROM debian:stable AS snapbase
-LABEL maintainer "Matt Dickinson <matt@sanbridge.org>"
+LABEL maintainer "Matt Dickinson"
 
 ENV TZ=America/New_York
 
@@ -55,6 +55,8 @@ COPY snapserver.conf /etc
 
 VOLUME /tmp
 
+EXPOSE 1704 1705 1780
+
 CMD ["snapserver", "--stdout", "--no-daemon"]
 
-EXPOSE 1704 1705 1780
+
