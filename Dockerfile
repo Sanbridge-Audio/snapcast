@@ -3,7 +3,7 @@ LABEL maintainer "Matt Dickinson"
 
 ENV TZ=America/New_York
 
-#Installation of everything needed to setup snapserver
+#Installation of everything needed to setup snapserver  
 RUN apt-get update && apt-get install -y \
 	alsa-utils \
 	avahi-daemon \
