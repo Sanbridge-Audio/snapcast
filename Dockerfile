@@ -2,7 +2,7 @@
 FROM debian:stable-slim AS builder
 
 # Install build dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt install -y \
     build-essential \
     git \
     libasound2-dev \
@@ -30,7 +30,7 @@ FROM debian:stable-slim
 COPY --from=builder /snapcast/server/snapserver /usr/local/bin/snapserver
 
 # Clean up unnecessary dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt install -y \
     libasound2 \
     libboost-system1.74.0 \
     libogg0 \
