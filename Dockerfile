@@ -1,74 +1,46 @@
-#FROM debian:stable 
-FROM debian:bullseye-slim AS builder
-LABEL maintainer "Matt Dickinson"
+# Use a Debian base image
+FROM debian:stable-slim AS builder
 
-ENV TZ=America/New_York
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    libasound2-dev \
+    libboost-dev \
+    libogg-dev \
+    libopus-dev \
+    libssl-dev \
+    libvorbis-dev \
+    libexecinfo-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies
-RUN apt-get update && \
-    apt-get install -y \
-        alsa-utils \
-        avahi-daemon \
-        build-essential \
-        git \
-        libasound2-dev \
-        libpulse-dev \
-        libvorbisidec-dev \
-        libvorbis-dev \
-        libopus-dev \
-        libflac-dev \
-        libsoxr-dev \
-        libavahi-client-dev \
-        libexpat1-dev \
-        libboost1.74-dev && \
-    rm -rf /var/lib/apt/lists/*
+# Clone Snapcast repository and build it
+RUN git clone https://github.com/badaix/snapcast.git /snapcast \
+    && cd /snapcast \
+    && git checkout $(git tag | sort -V | tail -n 1) \
+    && git submodule update --init \
+    && ./bootstrap \
+    && ./configure \
+    && make
 
-# Clone the source code
-RUN git clone https://github.com/badaix/snapcast.git
+# Use a smaller base image
+FROM debian:stable-slim
 
-# Build the software
-WORKDIR /snapcast
-RUN make
+# Copy the built Snapcast binary from the previous stage
+COPY --from=builder /snapcast/server/snapserver /usr/local/bin/snapserver
 
-# Create the final image
-FROM debian:bullseye-slim
-#FROM debian:stable-slim
-LABEL maintainer "Matt Dickinson"
+# Clean up unnecessary dependencies
+RUN apt-get update && apt-get install -y \
+    libasound2 \
+    libboost-system1.74.0 \
+    libogg0 \
+    libopus0 \
+    libssl1.1 \
+    libvorbis0a \
+    && rm -rf /var/lib/apt/lists/*
 
-ENV TZ=America/New_York
+# Expose the Snapcast server port
+EXPOSE 1704
 
-# Install dependencies
-RUN apt-get update && \
-    apt-get install -y \
-        alsa-utils \    
-        avahi-daemon \
-        libasound2-dev \
-        libpulse-dev \
-        libvorbisidec-dev \
-        libvorbis-dev \
-        libopus-dev \
-        libflac-dev \
-        libsoxr-dev \
-        libavahi-client-dev \
-        libexpat1-dev \
-        mosquitto-clients \
-        nano && \
-    rm -rf /var/lib/apt/lists/*
-
-# Copy the binary and configuration files from the builder stage
-COPY --from=builder /usr/bin/snapserver /usr/bin
-
-RUN mkdir /usr/share/snapserver
-
-COPY --from=builder /usr/share/snapserver /usr/share
-
-COPY snapserver.conf /etc
-
-VOLUME /tmp
-
-EXPOSE 1704 1705 1780
-
-CMD ["snapserver", "--stdout", "--no-daemon"]
-
-
-
+# Start the Snapcast server
+CMD ["/usr/local/bin/snapserver", "-d"]
