@@ -11,6 +11,8 @@ RUN apt update && apt install -y \
     libopus-dev \
     libssl-dev \
     libvorbis-dev \
+    autoconf \
+    automake \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone Snapcast repository and build it
@@ -18,7 +20,7 @@ RUN git clone https://github.com/badaix/snapcast.git /snapcast \
     && cd /snapcast \
     && git checkout $(git tag | sort -V | tail -n 1) \
     && git submodule update --init \
-    && ./bootstrap \
+    && autoreconf -fi \
     && ./configure \
     && make
 
