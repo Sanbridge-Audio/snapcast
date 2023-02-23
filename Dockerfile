@@ -57,7 +57,7 @@ RUN apt-get update && \
 
 # Copy the binary and configuration files from the builder stage
 COPY --from=builder /snapcast/snapserver /usr/bin/snapserver
-COPY --from=builder /snapcast/snapserver.conf /etc/snapserver.conf
+COPY snapserver.conf /etc/snapserver.conf
 COPY --from=builder /snapcast/.snapcast /root/.snapcast
 
 # Expose ports and set default command
