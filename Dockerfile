@@ -56,11 +56,11 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy the binary and configuration files from the builder stage
-COPY --from=snapbase /usr/bin/snapserver /usr/bin
+COPY --from=builder /usr/bin/snapserver /usr/bin
 
 RUN mkdir /usr/share/snapserver
 
-COPY --from=snapbase /usr/share/snapserver /usr/share/snapserver
+COPY --from=builder /usr/share/snapserver /usr/share/snapserver
 
 COPY snapserver.conf /etc
 
