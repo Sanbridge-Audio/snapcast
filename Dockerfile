@@ -11,7 +11,6 @@ RUN apt update && apt install -y \
     libopus-dev \
     libssl-dev \
     libvorbis-dev \
-    libexecinfo-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone Snapcast repository and build it
