@@ -1,4 +1,5 @@
-FROM debian:stable AS builder
+#FROM debian:stable 
+FROM debian:bullseye-slim AS builder
 LABEL maintainer "Matt Dickinson"
 
 ENV TZ=America/New_York
@@ -30,7 +31,8 @@ WORKDIR /snapcast
 RUN make
 
 # Create the final image
-FROM debian:stable-slim
+FROM debian:bullseye-slim
+#FROM debian:stable-slim
 LABEL maintainer "Matt Dickinson"
 
 ENV TZ=America/New_York
