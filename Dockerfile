@@ -20,6 +20,9 @@ RUN git clone https://github.com/badaix/snapcast.git /snapcast \
     && cd /snapcast \
     && git checkout $(git tag | sort -V | tail -n 1) \
     && git submodule update --init \
+    && cd libresample \
+    && autoreconf -i \
+    && cd .. \
     && autoreconf -fi \
     && ./configure \
     && make
