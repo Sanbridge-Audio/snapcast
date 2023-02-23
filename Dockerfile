@@ -60,7 +60,7 @@ COPY --from=builder /usr/bin/snapserver /usr/bin
 
 RUN mkdir /usr/share/snapserver
 
-COPY --from=builder /usr/share/snapserver /usr/share/snapserver
+COPY --from=builder /usr/share/snapserver /usr/share
 
 COPY snapserver.conf /etc
 
