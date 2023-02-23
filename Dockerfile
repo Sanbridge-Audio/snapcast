@@ -1,4 +1,5 @@
 FROM debian:stable-slim
+RUN apt-get update && apt-get install -y autoconf
 
 RUN apt update && \
     apt install -y --no-install-recommends \
