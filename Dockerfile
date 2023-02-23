@@ -3,6 +3,7 @@ LABEL maintainer "Matt Dickinson <matt@sanbridge.org>"
 
 ENV TZ=America/New_York
 
+
 #Installation of everything needed to setup snapserver
 RUN apt-get update && apt-get install -y \
 	alsa-utils \
