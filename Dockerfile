@@ -1,50 +1,37 @@
-# Use a Debian base image
-FROM debian:stable-slim AS builder
-
-# Install build dependencies
-RUN apt update && apt install -y \
-    build-essential \
-    git \
-    libasound2-dev \
-    libboost-dev \
-    libogg-dev \
-    libopus-dev \
-    libssl-dev \
-    libvorbis-dev \
-    autoconf \
-    automake \
-    && rm -rf /var/lib/apt/lists/*
-
-# Clone Snapcast repository and build it
-RUN git clone https://github.com/badaix/snapcast.git /snapcast \
-    && cd /snapcast \
-    && git checkout $(git tag | sort -V | tail -n 1) \
-    && git submodule update --init \
-    && cd libresample \
-    && autoreconf -i \
-    && cd .. \
-    && autoreconf -fi \
-    && ./configure \
-    && make
-
-# Use a smaller base image
 FROM debian:stable-slim
 
-# Copy the built Snapcast binary from the previous stage
-COPY --from=builder /snapcast/server/snapserver /usr/local/bin/snapserver
+RUN apt update && \
+    apt install -y --no-install-recommends \
+        build-essential \
+        git \
+        libasound2-dev \
+        libavahi-client-dev \
+        libavcodec-dev \
+        libavformat-dev \
+        libexpat1-dev \
+        libflac-dev \
+        libogg-dev \
+        libopus-dev \
+        libsamplerate0-dev \
+        libsndfile1-dev \
+        libsoxr-dev \
+        libvorbis-dev \
+        libwebsockets-dev \
+        libxml2-dev \
+        python3 \
+        python3-setuptools \
+        python3-wheel \
+        python3-pip && \
+    rm -rf /var/lib/apt/lists/*
 
-# Clean up unnecessary dependencies
-RUN apt update && apt install -y \
-    libasound2 \
-    libboost-system1.74.0 \
-    libogg0 \
-    libopus0 \
-    libssl1.1 \
-    libvorbis0a \
-    && rm -rf /var/lib/apt/lists/*
+RUN git clone https://github.com/badaix/snapcast.git /snapcast && \
+    cd /snapcast && \
+    git checkout $(git tag | sort -V | tail -n 1) && \
+    git submodule update --init && \
+    autoreconf -fi && \
+    ./configure && \
+    make
 
-# Expose the Snapcast server port
-EXPOSE 1704
+WORKDIR /snapcast
 
-# Start the Snapcast server
-CMD ["/usr/local/bin/snapserver", "-d"]
+CMD ["./snapserver"]
