@@ -20,7 +20,7 @@ RUN apt-get update && \
         libsoxr-dev \
         libavahi-client-dev \
         libexpat1-dev \
-        libboost1.67-dev && \
+        libboost1.74-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Clone the source code
