@@ -56,10 +56,19 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy the binary and configuration files from the builder stage
-COPY --from=builder /snapcast/snapserver /usr/bin/snapserver
-COPY snapserver.conf /etc/snapserver.conf
-COPY --from=builder /snapcast/.snapcast /root/.snapcast
+COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
-# Expose ports and set default command
+RUN mkdir /usr/share/snapserver
+
+COPY --from=snapbase /usr/share/snapserver /usr/share/snapserver
+
+COPY snapserver.conf /etc
+
+VOLUME /tmp
+
 EXPOSE 1704 1705 1780
-CMD ["snapserver", "--config",
+
+CMD ["snapserver", "--stdout", "--no-daemon"]
+
+
+
