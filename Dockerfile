@@ -44,7 +44,7 @@ RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
 # Copy snapserver service definition
 COPY snapserver /etc/services.d/snapserver
 
-# Copy snapserver configuration file and remove the default one
+# Remove old configuration file and copy new configuration file.
 RUN rm /etc/snapserver.conf
 COPY snapserver.conf /etc/
 
