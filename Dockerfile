@@ -1,67 +1,59 @@
-# Use Debian stable as the base image
-FROM debian:stable AS snapbase
+# Set the base image
+ARG DEBIAN_VERSION=stable-slim
+FROM debian:${DEBIAN_VERSION} AS snapbase
 
-# Set the maintainer label
-LABEL maintainer "Matt Dickinson <matt@sanbridge.org>"
+# Set maintainer label
+LABEL maintainer="Matt Dickinson <matt.dickinson@outlook.com>"
 
-# Set the timezone environment variable
+# Set argument for snapserver version
+ARG SNPSRV_VERSION=0.26.0-1
+ENV Version=$SNPSRV_VERSION
+
+# Set environment variables
+ENV HOME=/root
 ENV TZ=America/New_York
 
-# Install required packages for building Snapcast
+# Install packages required to setup snapserver
 RUN apt-get update && apt-get install -y \
-    alsa-utils \
-    avahi-daemon \
-    build-essential \
+    nano \
     git \
-    libasound2-dev \
     libpulse-dev \
-    libvorbisidec-dev \
-    libvorbis-dev \
-    libopus-dev \
-    libflac-dev \
     libsoxr-dev \
+    alsa-utils \
     libavahi-client-dev \
-    libexpat1-dev \
-    libboost-all-dev 
-
-# Clone the Snapcast repository
-RUN git clone https://github.com/badaix/snapcast.git
-
-# Set the working directory to the Snapcast server directory
-WORKDIR /snapcast/server
-
-# Build and install Snapcast
-RUN make && make install NO_ADDUSER=1
-
-# Create a new image for the configuration
-FROM debian:stable-slim AS config
-
-# Install required packages for running Snapcast
-RUN apt-get update && apt-get install -y \
-    alsa-utils \    
     avahi-daemon \
-    libasound2-dev \
-    libpulse-dev \
-    libvorbisidec-dev \
-    libvorbis-dev \
-    libopus-dev \
-    libflac-dev \
-    libsoxr-dev \
-    libavahi-client-dev \
-    libexpat1-dev \
-    mosquitto-clients \
-    nano 
+    wget && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy the snapserver binary from the snapbase image
-COPY --from=snapbase /usr/bin/snapserver /usr/bin
+# Download and install snapserver
+WORKDIR /tmp
+RUN wget https://github.com/badaix/snapcast/releases/download/v${SNPSRV_VERSION}/snapserver_${SNPSRV_VERSION}_amd64.deb && \
+    apt install ./snapserver_${SNPSRV_VERSION}_amd64.deb && \
+    rm ./snapserver_${SNPSRV_VERSION}_amd64.deb
 
-# Copy the Snapcast configuration files
-RUN mkdir /usr/share/snapserver
-COPY --from=snapbase /usr/share/snapserver /usr/share/snapserver
-COPY snapserver.conf /etc
+# Create new image based on snapbase
+FROM snapbase
 
-# Expose the necessary ports
-EXPOSE 1704 1705 1780
+# Set working directory
+WORKDIR $HOME
 
-# Set the default command for the container
+# Download s6 overlay
+ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64.tar.gz /tmp
+RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
+
+# Copy snapserver service definition
+COPY snapserver /etc/services.d/snapserver
+
+# Copy snapserver configuration file and remove the default one
+COPY snapserver.conf /etc/
+RUN rm /etc/snapserver.conf
+
+# Set volume
+VOLUME /tmp
+
+# Set command and entrypoint
 CMD ["snapserver", "--stdout", "--no-daemon"]
+ENTRYPOINT ["/init"]
+
+# Expose ports
+EXPOSE 1704 1705
