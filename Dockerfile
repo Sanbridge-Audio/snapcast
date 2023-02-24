@@ -57,4 +57,4 @@ CMD ["snapserver", "--stdout", "--no-daemon"]
 ENTRYPOINT ["/init"]
 
 # Expose ports
-EXPOSE 1704 1705
+EXPOSE 1704 1705 1780
