@@ -13,7 +13,7 @@ ENV Version=$SNPSRV_VERSION
 ENV HOME=/root
 ENV TZ=America/New_York
 
-
+  
 # Install packages required to setup snapserver
 RUN apt-get update && apt-get install -y \
     alsa-utils \
