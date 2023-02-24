@@ -1,64 +1,61 @@
-FROM debian:stable AS snapbase
-LABEL maintainer "Matt Dickinson <matt@sanbridge.org>"
+# Set the base image
+ARG DEBIAN_VERSION=stable-slim
+FROM debian:${DEBIAN_VERSION} AS snapbase
 
+# Set maintainer label
+LABEL maintainer="Matt Dickinson <matt.dickinson@outlook.com>"
+
+# Set argument for snapserver version
+ARG SNPSRV_VERSION=0.27.0
+ENV Version=$SNPSRV_VERSION
+
+# Set environment variables
+ENV HOME=/root
 ENV TZ=America/New_York
 
 
-#Installation of everything needed to setup snapserver
+# Install packages required to setup snapserver
 RUN apt-get update && apt-get install -y \
-	alsa-utils \
-	avahi-daemon \
-	build-essential \
-	git \
-	libasound2-dev \
-	libpulse-dev \
-	libvorbisidec-dev \
-	libvorbis-dev \
-	libopus-dev \
-	libflac-dev \
-	libsoxr-dev \
-	libavahi-client-dev \
-	libexpat1-dev \
-	libboost-all-dev 
+    alsa-utils \
+    avahi-daemon \
+    git \
+    libpulse-dev \
+    libsoxr-dev \
+    libavahi-client-dev \
+    nano \
+    wget && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/badaix/snapcast.git 
+# Download and install snapserver
+WORKDIR /tmp
+RUN wget https://github.com/badaix/snapcast/releases/download/v${SNPSRV_VERSION}/snapserver_${SNPSRV_VERSION}-1_amd64.deb && \
+    apt install ./snapserver_${SNPSRV_VERSION}-1_amd64.deb && \
+    rm ./snapserver_${SNPSRV_VERSION}-1_amd64.deb
 
-## Remove this to see if it works.  
-#&& \
-  #cd snapcast 
+# Create new image based on snapbase
+FROM snapbase
 
-WORKDIR /snapcast/server
+# Set working directory
+WORKDIR $HOME
 
-RUN make
-RUN make install
+# Download s6 overlay
+ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64.tar.gz /tmp
+RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
 
-FROM debian:stable-slim AS config
+# Copy snapserver service definition
+COPY snapserver /etc/services.d/snapserver
 
-RUN apt-get update && apt-get install -y \
-	alsa-utils \	
-	avahi-daemon \
-	libasound2-dev \
-	libpulse-dev \
-	libvorbisidec-dev \
-	libvorbis-dev \
-	libopus-dev \
-	libflac-dev \
-	libsoxr-dev \
-	libavahi-client-dev \
-	libexpat1-dev \
-	mosquitto-clients \
-	nano 
+# Remove old configuration file and copy new configuration file.
+RUN rm /etc/snapserver.conf
+COPY snapserver.conf /etc/
 
-COPY --from=snapbase /usr/bin/snapserver /usr/bin
 
-RUN mkdir /usr/share/snapserver
-
-COPY --from=snapbase /usr/share/snapserver /usr/share/snapserver
-
-COPY snapserver.conf /etc
-
+# Set volume
 VOLUME /tmp
 
+# Set command and entrypoint
 CMD ["snapserver", "--stdout", "--no-daemon"]
+ENTRYPOINT ["/init"]
 
+# Expose ports
 EXPOSE 1704 1705 1780
