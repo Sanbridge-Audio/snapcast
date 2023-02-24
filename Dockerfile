@@ -27,10 +27,10 @@ RUN git clone https://github.com/badaix/snapcast.git
 #&& \
   #cd snapcast 
 
-WORKDIR /snapcast
+WORKDIR /snapcast/server
 
 RUN make
-RUN make installserver
+RUN make install
 
 FROM debian:stable-slim AS config
 
