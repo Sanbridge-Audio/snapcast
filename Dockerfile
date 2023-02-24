@@ -46,8 +46,9 @@ RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
 COPY snapserver /etc/services.d/snapserver
 
 # Copy snapserver configuration file and remove the default one
-COPY snapserver.conf /etc/
 RUN rm /etc/snapserver.conf
+COPY snapserver.conf /etc/
+
 
 # Set volume
 VOLUME /tmp
