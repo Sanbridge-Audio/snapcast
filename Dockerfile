@@ -21,7 +21,10 @@ RUN apt-get update && apt-get install -y \
 	libexpat1-dev \
 	libboost-all-dev 
 
-RUN git clone https://github.com/badaix/snapcast.git #&& \
+RUN git clone https://github.com/badaix/snapcast.git 
+
+## Remove this to see if it works.  
+#&& \
   #cd snapcast 
 
 WORKDIR /snapcast
