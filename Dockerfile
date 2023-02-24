@@ -1,29 +1,59 @@
-FROM debian:buster-slim
+FROM debian:stable AS snapbase
+LABEL maintainer "Matt Dickinson <matt@sanbridge.org>"
 
-RUN apt update && apt install -y \
+ENV TZ=America/New_York
+
+# Installation of everything needed to setup snapserver
+RUN apt-get update && \
+    apt-get install -y \
+    alsa-utils \
+    avahi-daemon \
     build-essential \
     git \
     libasound2-dev \
+    libpulse-dev \
     libvorbisidec-dev \
-    libflac-dev \
-    libogg-dev \
+    libvorbis-dev \
     libopus-dev \
-    libpcre3-dev \
+    libflac-dev \
     libsoxr-dev \
-    libprotobuf-c-dev \
     libavahi-client-dev \
-    protobuf-c-compiler \
-    libavahi-common-dev \
-    autoconf \
-    && rm -rf /var/lib/apt/lists/*
+    libexpat1-dev \
+    libboost-all-dev && \
+    git clone https://github.com/badaix/snapcast.git && \
+    cd snapcast/server && \
+    make && \
+    make install && \
+    cd / && \
+    rm -rf /snapcast
 
-RUN git clone https://github.com/badaix/snapcast.git /snapcast \
-    && cd /snapcast \
-    && git checkout $(git tag | sort -V | tail -n 1) \
-    && git submodule update --init \
-    && autoreconf -fi \
-    && ./configure \
-    && make \
-    && make install
+FROM debian:stable-slim AS config
+RUN apt-get update && \
+    apt-get install -y \
+    alsa-utils \
+    avahi-daemon \
+    libasound2-dev \
+    libpulse-dev \
+    libvorbisidec-dev \
+    libvorbis-dev \
+    libopus-dev \
+    libflac-dev \
+    libsoxr-dev \
+    libavahi-client-dev \
+    libexpat1-dev \
+    mosquitto-clients \
+    nano && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["/usr/local/bin/snapserver"]
+COPY --from=snapbase /usr/bin/snapserver /usr/bin
+COPY --from=snapbase /usr/share/snapserver /usr/share/snapserver
+COPY snapserver.conf /etc
+
+VOLUME /tmp
+
+WORKDIR /usr/share/snapserver
+
+CMD ["snapserver", "--stdout", "--no-daemon"]
+
+EXPOSE 1704 1705 1780
