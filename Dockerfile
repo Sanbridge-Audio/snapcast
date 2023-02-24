@@ -15,13 +15,13 @@ ENV TZ=America/New_York
 
 # Install packages required to setup snapserver
 RUN apt-get update && apt-get install -y \
-    nano \
+    alsa-utils \
+    avahi-daemon \
     git \
     libpulse-dev \
     libsoxr-dev \
-    alsa-utils \
     libavahi-client-dev \
-    avahi-daemon \
+    nano \
     wget && \
     rm -rf /var/lib/apt/lists/*
 
