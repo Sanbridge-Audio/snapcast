@@ -23,7 +23,7 @@ RUN apt-get update && \
     git clone https://github.com/badaix/snapcast.git && \
     cd snapcast/server && \
     make && \
-    make install && \
+    make install NO_ADDUSER=1 && \
     cd / && \
     rm -rf /snapcast
 
