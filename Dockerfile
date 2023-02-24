@@ -6,7 +6,7 @@ FROM debian:${DEBIAN_VERSION} AS snapbase
 LABEL maintainer="Matt Dickinson <matt.dickinson@outlook.com>"
 
 # Set argument for snapserver version
-ARG SNPSRV_VERSION=0.26.0-1
+ARG SNPSRV_VERSION=0.27.0-1
 ENV Version=$SNPSRV_VERSION
 
 # Set environment variables
@@ -31,6 +31,7 @@ RUN wget https://github.com/badaix/snapcast/releases/download/v${SNPSRV_VERSION}
     apt install ./snapserver_${SNPSRV_VERSION}_amd64.deb && \
     rm ./snapserver_${SNPSRV_VERSION}_amd64.deb
 
+RUN wgethttps://github.com/badaix/snapcast/releases/download/v0.27.0/snapserver_0.27.0-1_amd64.deb
 # Create new image based on snapbase
 FROM snapbase
 
