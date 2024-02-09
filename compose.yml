@@ -4,7 +4,7 @@ services:
     image: snapserver
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: small.Dockerfile
     ports:
       - "1704:1704"
       - "1705:1705"
