@@ -23,14 +23,17 @@ RUN apt-get update && apt-get install -y \
     libsoxr-dev \
     libavahi-client-dev \
     nano \
+    pulseaudio \
     wget && \
     rm -rf /var/lib/apt/lists/*
 
 # Download and install snapserver
 WORKDIR /tmp
-RUN wget https://github.com/badaix/snapcast/releases/download/v${SNPSRV_VERSION}/snapserver_${SNPSRV_VERSION}-1_amd64.deb && \
-    apt install ./snapserver_${SNPSRV_VERSION}-1_amd64.deb && \
-    rm ./snapserver_${SNPSRV_VERSION}-1_amd64.deb
+RUN wget https://github.com/badaix/snapcast/releases/download/v${SNPSRV_VERSION}/snapserver_${SNPSRV_VERSION}-1_armhf.deb \
+    && dpkg -i ./snapserver_${SNPSRV_VERSION}-1_armhf.deb \
+    && apt update && apt -f install -y \
+    && rm -rf /var/lib/apt/lists/*
+#rm ./snapserver_${SNPSRV_VERSION}-1_armhf.deb
 
 # Create new image based on snapbase
 FROM snapbase
@@ -39,11 +42,11 @@ FROM snapbase
 WORKDIR $HOME
 
 # Download s6 overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64.tar.gz /tmp
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
+#ADD https://github.com/just-containers/s6-overlay/releases/download/v2.2.0.3/s6-overlay-amd64.tar.gz /tmp
+#RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
 
 # Copy snapserver service definition
-COPY snapserver /etc/services.d/snapserver
+#COPY snapserver /etc/services.d/snapserver
 
 # Remove old configuration file and copy new configuration file.
 RUN rm /etc/snapserver.conf

@@ -1,0 +1,18 @@
+version: '3'
+services:
+  snapserver:
+    image: snapserver
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "1704:1704"
+      - "1705:1705"
+    devices:
+      - /dev/snd:/dev/snd
+    volumes:
+      - ./snapserver.conf:/etc/snapserver.conf:ro
+      - persistent_data:/var/lib/snapserver/
+
+volumes:
+  persistent_data:
